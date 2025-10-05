@@ -10,19 +10,180 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #6c63ff;
+      --primary-light: #8a84ff;
+      --secondary: #ff6584;
+      --dark: #2d2b55;
+      --light: #f8f9fa;
+      --gray: #8c8c8c;
+      --success: #4caf50;
+      --danger: #f44336;
+      --warning: #ff9800;
+      --info: #2196f3;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: var(--dark);
+    }
+    
+    .edit-container {
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      width: 100%;
+      max-width: 600px;
+    }
+    
+    .edit-header {
+      background: linear-gradient(to right, var(--primary), var(--primary-light));
+      color: white;
+      padding: 25px 30px;
+      text-align: center;
+      border-radius: 20px 20px 0 0;
+    }
+    
+    .app-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+      font-size: 24px;
+    }
+    
+    .page-subtitle {
+      font-weight: 300;
+      opacity: 0.9;
+      font-size: 16px;
+    }
+    
+    .edit-form-container {
+      padding: 40px 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 0;
+    }
+    
+    .task-input {
+      border-radius: 12px 0 0 12px;
+      padding: 18px 20px !important;
+      border: 2px solid #eaeaea;
+      border-right: none;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      flex-grow: 1;
+    }
+    
+    .task-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.25rem rgba(108, 99, 255, 0.25);
+    }
+    
+    .btn-update {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      border-radius: 0 12px 12px 0;
+      padding: 18px 25px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      color: white;
+    }
+    
+    .btn-update:hover {
+      background-color: var(--primary-light);
+      border-color: var(--primary-light);
+      transform: translateY(-2px);
+      color: white;
+    }
+    
+    .input-group {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+    }
+    
+    .back-link {
+      text-align: center;
+      margin-top: 25px;
+    }
+    
+    .back-link a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    .back-link a:hover {
+      color: var(--primary-light);
+      transform: translateX(-3px);
+    }
+    
+    @media (max-width: 576px) {
+      .edit-form-container {
+        padding: 30px 20px;
+      }
+      
+      .input-group {
+        flex-direction: column;
+      }
+      
+      .task-input {
+        border-radius: 12px 12px 0 0;
+        border-right: 2px solid #eaeaea;
+        border-bottom: none;
+      }
+      
+      .btn-update {
+        border-radius: 0 0 12px 12px;
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h3 class="pt-5 pb-5 text-center">Django TODO App - Edit Task</h3>
-    <form action="{% url 'editTask' get_task.id %}" method="POST" style="width: 500px; margin:auto;">
-      {% csrf_token %}
+  <div class="edit-container">
+    <div class="edit-header">
+      <h1 class="app-title">Django TODO App</h1>
+      <p class="page-subtitle">Edit Your Task</p>
+    </div>
+    
+    <div class="edit-form-container">
+      <form action="{% url 'editTask' get_task.id %}" method="POST">
+        {% csrf_token %}
         <div class="form-group">
-            <span style="display: flex;">
-                <input type="text" name="task" class="form-control" placeholder="Add a task" value="{{ get_task.task }}">
-                <button type="submit" class="btn btn-primary" style="width: 200px;"><i class="fa fa-plus"></i> Update</button>
-            </span>
+          <div class="input-group">
+            <input type="text" name="task" class="form-control task-input" placeholder="Update your task..." value="{{ get_task.task }}" required>
+            <button type="submit" class="btn btn-update">
+              <i class="fa fa-pencil"></i> Update Task
+            </button>
+          </div>
         </div>
-    </form>
+      </form>
+      
+      <div class="back-link">
+        <a href="{% url 'home' %}">
+          <i class="fa fa-arrow-left"></i> Back to Tasks
+        </a>
+      </div>
+    </div>
   </div>
 </body>
 </html>

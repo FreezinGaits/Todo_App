@@ -12,77 +12,341 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        .form-control{
-        padding: 1.375rem .75rem !important;
-    }
+        :root {
+            --primary: #6c63ff;
+            --primary-light: #8a84ff;
+            --secondary: #ff6584;
+            --dark: #2d2b55;
+            --light: #f8f9fa;
+            --gray: #8c8c8c;
+            --success: #4caf50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --info: #2196f3;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+            color: var(--dark);
+        }
+        
+        .app-container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .app-header {
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: white;
+            padding: 25px 30px;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .app-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .date-display {
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 8px;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+        
+        .tasks-container {
+            padding: 30px;
+        }
+        
+        .task-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .task-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .task-text {
+            flex-grow: 1;
+            margin-right: 15px;
+            font-weight: 500;
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-action {
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-done {
+            background-color: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        
+        .btn-done:hover {
+            background-color: #3d8b40;
+            border-color: #3d8b40;
+        }
+        
+        .btn-edit {
+            background-color: var(--info);
+            border-color: var(--info);
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background-color: #0b7dda;
+            border-color: #0b7dda;
+        }
+        
+        .btn-delete {
+            background-color: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background-color: #d32f2f;
+            border-color: #d32f2f;
+        }
+        
+        .btn-undone {
+            background-color: var(--warning);
+            border-color: var(--warning);
+            color: white;
+        }
+        
+        .btn-undone:hover {
+            background-color: #e68900;
+            border-color: #e68900;
+        }
+        
+        .completed-task {
+            opacity: 0.7;
+            border-left-color: var(--success);
+        }
+        
+        .completed-task .task-text {
+            text-decoration: line-through;
+        }
+        
+        .tasks-column {
+            height: 450px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .tasks-column::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .tasks-column::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .tasks-column::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 10px;
+        }
+        
+        .tasks-column::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+        
+        .task-form-container {
+            background-color: white;
+            padding: 25px 30px;
+            border-top: 1px solid #eee;
+            position: sticky;
+            bottom: 0;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .task-input {
+            border-radius: 12px;
+            padding: 15px 20px !important;
+            border: 2px solid #eaeaea;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .task-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(108, 99, 255, 0.25);
+        }
+        
+        .btn-add {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            border-radius: 12px;
+            padding: 15px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-add:hover {
+            background-color: var(--primary-light);
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        @media (max-width: 768px) {
+            .tasks-column {
+                height: 350px;
+            }
+            
+            .task-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .btn-action {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h3 class="pt-5 text-center">Django ToDo App</h3>
-        <div class="row">
-            <h4>My Day</h4>
-            <p class="text-muted">{% now "jS F Y" %}</p>
-            <div class="col-md-7 col-lg-7" style="height: 450px; overflow: scroll;">
-                <!-- List of all the tasks for the day -->
-                 {% for task in tasks %}
-                <div class="card m-1">
-                    <div class="card-body">
-                        {{ task.task }}
-                        <span style="position: relative; float: right;">
-                            <a href="{% url 'mark_as_done' task.id %}" class="btn btn-success"><i class="fa fa-check"></i> Mark as Done</a>
-                            <a href="{% url 'deleteTask' task.id %}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                            <a href="{% url 'editTask' task.id %}" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
-                        </span>
+    <div class="app-container">
+        <div class="app-header">
+            <h1 class="app-title">Django ToDo App</h1>
+            <p class="date-display mb-0">{% now "jS F Y" %}</p>
+        </div>
+        
+        <div class="tasks-container">
+            <div class="row">
+                <div class="col-md-7 col-lg-7">
+                    <h4 class="section-title">My Day</h4>
+                    <div class="tasks-column">
+                        {% if tasks %}
+                            {% for task in tasks %}
+                            <div class="task-card">
+                                <div class="task-text">{{ task.task }}</div>
+                                <div class="task-actions">
+                                    <a href="{% url 'mark_as_done' task.id %}" class="btn btn-action btn-done">
+                                        <i class="fa fa-check"></i> Done
+                                    </a>
+                                    <a href="{% url 'editTask' task.id %}" class="btn btn-action btn-edit">
+                                        <i class="fa fa-pencil"></i> Edit
+                                    </a>
+                                    <a href="{% url 'deleteTask' task.id %}" class="btn btn-action btn-delete">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="empty-state">
+                                <i class="fa fa-check-circle"></i>
+                                <h5>No tasks for today</h5>
+                                <p>Add a task to get started!</p>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
-                {% endfor %}
-               
-            </div>
-            <div class="col-md-5 col-lg-5">
-                <h5>Completed Tasks</h5>
-                <!-- List of all the tasks that have completed -->
-                {% for task in completed_tasks %}
-                <div class="card m-1">
-                    <div class="card-body">
-                        {{ task.task }}
-                        <span style="position: relative; float: right;">
-                          <a href="{% url 'mark_as_undone' task.id %}" class="btn btn-danger"><i class="fa fa-times"></i> Mark as Undone</a>
-                        </span>
+                
+                <div class="col-md-5 col-lg-5">
+                    <h4 class="section-title">Completed Tasks</h4>
+                    <div class="tasks-column">
+                        {% if completed_tasks %}
+                            {% for task in completed_tasks %}
+                            <div class="task-card completed-task">
+                                <div class="task-text">{{ task.task }}</div>
+                                <div class="task-actions">
+                                    <a href="{% url 'mark_as_undone' task.id %}" class="btn btn-action btn-undone">
+                                        <i class="fa fa-undo"></i> Undo
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="empty-state">
+                                <i class="fa fa-trophy"></i>
+                                <h5>No completed tasks</h5>
+                                <p>Complete a task to see it here!</p>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
-                {% endfor %}
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6 col-lg-6 p-0" style="position: absolute; bottom: 50px;">
-                <!-- To Do Form -->
-                <form action="{% url 'addTask' %}" method="POST">
-                  {% csrf_token %}
-                  <!-- cross site request forgery, django generates the csrf token from the server side to keep our forms secure, csrf token is meant to prevent unintentional data modification which are usually applied with the post request, in short it prevents cross site request forgery attacks-->
-                    <div class="form-group">
-                        <span style="display: flex;">
-                            <input type="text" name="task" class="form-control" placeholder="Add a task">
-                            <button type="submit" class="btn btn-primary" style="width: 200px;"><i class="fa fa-plus"></i> Add</button>
-                        </span>
+        
+        <div class="task-form-container">
+            <form action="{% url 'addTask' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" name="task" class="form-control task-input" placeholder="Add a new task..." required>
+                        <button type="submit" class="btn btn-add">
+                            <i class="fa fa-plus"></i> Add Task
+                        </button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </body>
 </html>
-
-
-<!-- The format string "jS F Y" uses specific format codes that Django (which uses Python's strftime() conventions) interprets to construct the date string based on the current time:
-
-j: Displays the Day of the month without leading zeros. Since today is the 5th, this outputs 5.
-
-S: Appends the Ordinal suffix for the day of the month. For the 5th, this outputs th.
-
-F: Displays the Full month name. For October, this outputs October.
-
-Y: Displays the Full year, including the century. This outputs 2025.
-
-Putting these together results in the date: 5th October 2025. -->
